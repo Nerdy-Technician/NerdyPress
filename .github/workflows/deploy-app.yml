@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       base_path:
-        description: 'Base path for GitHub Pages'
+        description: 'Base path for the deployed app. Use / for a custom domain.'
         required: false
-        default: /NerdyPress/
+        default: /
         type: string
 
 permissions:
@@ -42,7 +42,7 @@ jobs:
       - name: Build app
         run: npm run build
         env:
-          VITE_BASE_PATH: ${{ inputs.base_path || '/NerdyPress/' }}
+          VITE_BASE_PATH: ${{ inputs.base_path || '/' }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

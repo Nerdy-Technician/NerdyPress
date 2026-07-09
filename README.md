@@ -62,9 +62,9 @@ The workflow installs dependencies, builds NerdyPress, zips the production `dist
 
 The live NerdyPress app is deployed by `.github/workflows/deploy-app.yml`.
 
-It builds the Vite app with `VITE_BASE_PATH=/NerdyPress/` and publishes `dist` to GitHub Pages. In the GitHub repository settings, set Pages to use **GitHub Actions** as the source.
+It builds the Vite app with `VITE_BASE_PATH=/` for the custom domain and publishes `dist` to GitHub Pages. In the GitHub repository settings, set Pages to use **GitHub Actions** as the source.
 
-You can redeploy manually from **Actions > Deploy App > Run workflow**. The base path defaults to `/NerdyPress/`.
+You can redeploy manually from **Actions > Deploy App > Run workflow**. The base path defaults to `/`. Only use `/NerdyPress/` if you are deploying to the default GitHub Pages repo path instead of the custom domain.
 
 ## Mastodon Release Posts
 
