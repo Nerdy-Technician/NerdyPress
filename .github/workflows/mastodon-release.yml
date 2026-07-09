@@ -54,12 +54,11 @@ jobs:
           if [ -n "$CUSTOM_MESSAGE" ]; then
             status="$CUSTOM_MESSAGE"
           else
-            status="NerdyPress ${version} is out!
-
-${release_name}
-${release_url}
-
-#NerdyPress #VitePress #OpenSource"
+            status="$(printf '%s\n\n%s\n%s\n\n%s' \
+              "NerdyPress ${version} is out!" \
+              "${release_name}" \
+              "${release_url}" \
+              "#NerdyPress #VitePress #OpenSource")"
           fi
 
           {
