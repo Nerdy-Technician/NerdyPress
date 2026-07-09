@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: NerdyPress docs
+    url: https://nerdytech.dev/docs/NerdyPress
+    about: Check the docs before opening a new issue.
+  - name: Nerdy Technician
+    url: https://nerdytech.dev/
+    about: Visit the Nerdy Technician site.

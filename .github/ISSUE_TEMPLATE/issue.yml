@@ -1,0 +1,27 @@
+name: General issue
+description: Report a general problem, question, or rough edge.
+title: "[Issue]: "
+labels: ["issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve NerdyPress. Give as much useful detail as you can.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What needs attention?
+      placeholder: Tell us what happened or what feels wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Add screenshots, links, generated ZIP details, or anything else that helps.
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: Firefox, Chrome, Edge, Safari...

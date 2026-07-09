@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest a new option, theme, workflow, or generated output.
+title: "[Request]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      placeholder: It would be useful if NerdyPress could...
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Requested feature
+      description: Describe the feature or change you want.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or mockups
+      description: Add links, screenshots, sketches, or apps that show the idea.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Generator UI
+        - Theme and styling
+        - Generated VitePress output
+        - Workflows and deployment
+        - Documentation
+        - Other

@@ -1,0 +1,119 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+    paths:
+      - RELEASE.md
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, for example v1.0.0'
+        required: false
+        type: string
+      prerelease:
+        description: 'Mark this release as a prerelease'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read release file
+        id: release_file
+        shell: bash
+        run: |
+          version="$(awk -F': *' '/^Version:/ { print $2; exit }' RELEASE.md)"
+          prerelease="$(awk -F': *' '/^Prerelease:/ { print tolower($2); exit }' RELEASE.md)"
+          if [ -z "$version" ]; then
+            echo "RELEASE.md must contain a line like: Version: v0.1.0" >&2
+            exit 1
+          fi
+          if [[ "$version" != v* ]]; then
+            version="v$version"
+          fi
+          if [ "$prerelease" != "true" ]; then
+            prerelease="false"
+          fi
+          awk 'found { print } /^## Change Notes/ { found=1; next } /^## / && found { exit }' RELEASE.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "- Release $version" > release-notes.md
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+
+      - name: Choose release version
+        id: release
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.tag }}" ]; then
+            version="${{ inputs.tag }}"
+          elif [ "${{ github.ref_type }}" = "tag" ]; then
+            version="${{ github.ref_name }}"
+          else
+            version="${{ steps.release_file.outputs.version }}"
+          fi
+          if [[ "$version" != v* ]]; then
+            version="v$version"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag from release file
+        if: github.ref_type != 'tag'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git rev-parse "${{ steps.release.outputs.version }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.release.outputs.version }} already exists."
+          else
+            git tag -a "${{ steps.release.outputs.version }}" -m "NerdyPress ${{ steps.release.outputs.version }}"
+            git push origin "${{ steps.release.outputs.version }}"
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Package dist
+        run: |
+          cd dist
+          zip -r ../nerdypress-dist.zip .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nerdypress-dist
+          path: nerdypress-dist.zip
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release.outputs.version }}
+          name: NerdyPress ${{ steps.release.outputs.version }}
+          prerelease: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || steps.release_file.outputs.prerelease }}
+          body_path: release-notes.md
+          files: nerdypress-dist.zip
