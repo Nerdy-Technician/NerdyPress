@@ -76,7 +76,7 @@ Add these in GitHub repository settings:
 - Repository variable `MASTODON_VISIBILITY`: optional, one of `public`, `unlisted`, `private`, or `direct`; defaults to `public`
 - Repository secret `MASTODON_ACCESS_TOKEN`: a Mastodon access token with permission to create statuses
 
-The workflow runs when a GitHub Release is published. It can also be run manually with a version, release URL, and optional custom message.
+The workflow runs after the `Release` workflow completes successfully, and also when a GitHub Release is published manually. It can be run manually with a version, release URL, and optional custom message.
 
 You can post manually from **Actions > Mastodon Release Update > Run workflow**. If you leave version and release URL blank, it will use the latest GitHub Release.
 
