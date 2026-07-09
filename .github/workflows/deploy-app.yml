@@ -5,6 +5,12 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      base_path:
+        description: 'Base path for GitHub Pages'
+        required: false
+        default: /NerdyPress/
+        type: string
 
 permissions:
   contents: read
@@ -36,7 +42,7 @@ jobs:
       - name: Build app
         run: npm run build
         env:
-          VITE_BASE_PATH: /NerdyPress/
+          VITE_BASE_PATH: ${{ inputs.base_path || '/NerdyPress/' }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

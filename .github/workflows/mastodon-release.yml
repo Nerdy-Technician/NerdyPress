@@ -8,11 +8,11 @@ on:
     inputs:
       version:
         description: 'Version to announce, for example v0.1.0'
-        required: true
+        required: false
         type: string
       release_url:
-        description: 'Release URL'
-        required: true
+        description: 'Release URL. Leave blank to use the latest GitHub Release.'
+        required: false
         type: string
       message:
         description: 'Optional custom message'
@@ -32,6 +32,7 @@ jobs:
         id: status
         env:
           CUSTOM_MESSAGE: ${{ inputs.message }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
@@ -41,7 +42,13 @@ jobs:
           else
             version="${{ inputs.version }}"
             release_url="${{ inputs.release_url }}"
-            release_name="NerdyPress ${version}"
+            if [ -z "$version" ] || [ -z "$release_url" ]; then
+              version="${version:-$(gh api "repos/${{ github.repository }}/releases/latest" --jq '.tag_name')}"
+              release_url="${release_url:-$(gh api "repos/${{ github.repository }}/releases/latest" --jq '.html_url')}"
+              release_name="$(gh api "repos/${{ github.repository }}/releases/latest" --jq '.name')"
+            else
+              release_name="NerdyPress ${version}"
+            fi
           fi
 
           if [ -n "$CUSTOM_MESSAGE" ]; then

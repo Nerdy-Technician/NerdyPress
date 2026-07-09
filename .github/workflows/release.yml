@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
     paths:
       - RELEASE.md
   workflow_dispatch:
@@ -63,8 +61,6 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.tag }}" ]; then
             version="${{ inputs.tag }}"
-          elif [ "${{ github.ref_type }}" = "tag" ]; then
-            version="${{ github.ref_name }}"
           else
             version="${{ steps.release_file.outputs.version }}"
           fi
@@ -74,7 +70,6 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Create tag from release file
-        if: github.ref_type != 'tag'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
