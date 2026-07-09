@@ -59,6 +59,24 @@ It can run in two ways:
 
 The workflow installs dependencies, builds NerdyPress, zips the production `dist` folder, uploads the artifact, creates the tag if needed, and publishes a GitHub Release with the ZIP attached.
 
+## App Deployment
+
+The live NerdyPress app is deployed by `.github/workflows/deploy-app.yml`.
+
+It builds the Vite app with `VITE_BASE_PATH=/NerdyPress/` and publishes `dist` to GitHub Pages. In the GitHub repository settings, set Pages to use **GitHub Actions** as the source.
+
+## Mastodon Release Posts
+
+Mastodon release announcements are handled separately by `.github/workflows/mastodon-release.yml`.
+
+Add these in GitHub repository settings:
+
+- Repository variable `MASTODON_INSTANCE_URL`: for example `https://masto.nerdy-technician.social`
+- Repository variable `MASTODON_VISIBILITY`: optional, one of `public`, `unlisted`, `private`, or `direct`; defaults to `public`
+- Repository secret `MASTODON_ACCESS_TOKEN`: a Mastodon access token with permission to create statuses
+
+The workflow runs when a GitHub Release is published. It can also be run manually with a version, release URL, and optional custom message.
+
 ## What NerdyPress Generates
 
 The downloaded site includes:
@@ -95,4 +113,3 @@ The downloaded site includes:
 ├── package.json
 └── tsconfig.json
 ```
-
