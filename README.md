@@ -58,6 +58,25 @@ It can run in two ways:
 
 The workflow installs dependencies, builds NerdyPress, zips the production `dist` folder, uploads the artifact, creates the tag if needed, and publishes a GitHub Release with the ZIP attached.
 
+## App Deployment
+
+The live NerdyPress app is deployed to `https://press.nerdytech.dev/` by `.github/workflows/deploy-app.yml`.
+
+In GitHub repository settings, set Pages to use **GitHub Actions** as the source.
+
+## Mastodon Release Posts
+
+Mastodon release announcements are handled by `.github/workflows/mastodon-release.yml`.
+
+Add these in GitHub repository settings:
+
+- Repository variable `MASTODON_INSTANCE_URL`: for example `https://masto.nerdy-technician.social`
+- Repository variable `MASTODON_VISIBILITY`: optional, one of `public`, `unlisted`, `private`, or `direct`; defaults to `public`
+- Repository variable `NERDYPRESS_APP_URL`: optional, defaults to `https://press.nerdytech.dev/`
+- Repository secret `MASTODON_ACCESS_TOKEN`: a Mastodon access token with permission to create statuses
+
+The Mastodon post includes both the GitHub Release URL and the live app URL.
+
 ## What NerdyPress Generates
 
 The downloaded site includes:
