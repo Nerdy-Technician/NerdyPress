@@ -99,7 +99,7 @@ jobs:
           zip -r ../nerdypress-dist.zip .
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nerdypress-dist
           path: nerdypress-dist.zip
