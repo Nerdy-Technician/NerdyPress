@@ -37,17 +37,22 @@ jobs:
       - name: Build Mastodon status
         id: status
         env:
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+          RELEASE_HTML_URL: ${{ github.event.release.html_url }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_RELEASE_URL: ${{ inputs.release_url }}
           CUSTOM_MESSAGE: ${{ inputs.message }}
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
-            version="${{ github.event.release.tag_name }}"
-            release_url="${{ github.event.release.html_url }}"
-            release_name="${{ github.event.release.name }}"
+            version="${RELEASE_TAG_NAME}"
+            release_url="${RELEASE_HTML_URL}"
+            release_name="${RELEASE_NAME}"
           else
-            version="${{ inputs.version }}"
-            release_url="${{ inputs.release_url }}"
+            version="${INPUT_VERSION}"
+            release_url="${INPUT_RELEASE_URL}"
             if [ -z "$version" ] || [ -z "$release_url" ]; then
               version="${version:-$(gh api "repos/${{ github.repository }}/releases/latest" --jq '.tag_name')}"
               release_url="${release_url:-$(gh api "repos/${{ github.repository }}/releases/latest" --jq '.html_url')}"
