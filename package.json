@@ -14,6 +14,6 @@
   },
   "dependencies": {
     "jszip": "^3.10.2",
-    "simple-icons": "^16.35.0"
+    "simple-icons": "^16.36.0"
   }
 }
