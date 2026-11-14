@@ -10,10 +10,10 @@
   },
   "devDependencies": {
     "typescript": "~7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.8"
   },
   "dependencies": {
     "jszip": "^3.10.2",
-    "simple-icons": "^16.36.0"
+    "simple-icons": "^16.37.0"
   }
 }
